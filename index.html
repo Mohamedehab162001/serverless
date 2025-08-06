@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Feedback Collector</title>
+</head>
+<body>
+  <h2>Submit Your Feedback</h2>
+  <form id="feedbackForm">
+    <textarea id="feedbackText" rows="6" cols="40" placeholder="Enter feedback here..." required></textarea><br><br>
+    <button type="submit">Submit</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const feedback = document.getElementById('feedbackText').value;
+
+      const res = await fetch('/api/analyzeFeedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feedback })
+      });
+
+      const data = await res.json();
+      document.getElementById('result').innerText =
+        `Sentiment: ${data.sentiment}\nPositive: ${data.scores.positive}, Neutral: ${data.scores.neutral}, Negative: ${data.scores.negative}`;
+    });
+  </script>
+</body>
+</html>
